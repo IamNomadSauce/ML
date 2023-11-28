@@ -299,64 +299,104 @@ class Loss_CategoricalCrossentropy(Loss):
 # -----------------------------------------------
 
 # Create dataset
-X, y = vertical_data(samples=100, classes=3)
-plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap='brg')
-plt.show()
+# X, y = vertical_data(samples=100, classes=3)
+# plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap='brg')
+# plt.show()
 # Create manual
-dense1 = Layer_Dense(2,3)
-activation1 = Activation_ReLU()
-dense2 = Layer_Dense(3,3)
-activation2 = Activation_Softmax()
+# dense1 = Layer_Dense(2,3)
+# activation1 = Activation_ReLU()
+# dense2 = Layer_Dense(3,3)
+# activation2 = Activation_Softmax()
 
 
-# Create loss function
-loss_function = Loss_CategoricalCrossentropy()
+# # Create loss function
+# loss_function = Loss_CategoricalCrossentropy()
 
-# Helper variables
-lowest_loss = 9999999
-best_dense1_weights = dense1.weights.copy()
-best_dense1_biases = dense1.biases.copy()
-best_dense2_weights = dense2.weights.copy()
-best_dense2_biases = dense2.biases.copy()
+# # Helper variables
+# lowest_loss = 9999999
+# best_dense1_weights = dense1.weights.copy()
+# best_dense1_biases = dense1.biases.copy()
+# best_dense2_weights = dense2.weights.copy()
+# best_dense2_biases = dense2.biases.copy()
 
-for iteration in range(10000):
+# for iteration in range(10000):
 
-    # Update weights with some small random values
-    dense1.weights += 0.05 * np.random.randn(2,3)
-    dense1.biases += 0.05 * np.random.randn(1,3)
-    dense2.weights += 0.05 * np.random.randn(3,3)
-    dense2.biases += 0.05 * np.random.randn(1,3)
+#     # Update weights with some small random values
+#     dense1.weights += 0.05 * np.random.randn(2,3)
+#     dense1.biases += 0.05 * np.random.randn(1,3)
+#     dense2.weights += 0.05 * np.random.randn(3,3)
+#     dense2.biases += 0.05 * np.random.randn(1,3)
 
-    # Perform a forward pass of our training data through this layer
-    dense1.forward(X)
-    activation1.forward(dense1.output)
-    dense2.forward(activation1.output)
-    activation2.forward(dense2.output)
+#     # Perform a forward pass of our training data through this layer
+#     dense1.forward(X)
+#     activation1.forward(dense1.output)
+#     dense2.forward(activation1.output)
+#     activation2.forward(dense2.output)
 
-    # Perform a forward pass through activation function
-    # Takes output of second dense layer here and returns loss
-    loss = loss_function.calculate(activation2.output, y)
+#     # Perform a forward pass through activation function
+#     # Takes output of second dense layer here and returns loss
+#     loss = loss_function.calculate(activation2.output, y)
 
-    # Calculate accuracy from output of activation2 and targets
-    # Calculate values along first axis
-    predictions = np.argmax(activation2.output, axis=1)
-    accuracy = np.mean(predictions==y)
+#     # Calculate accuracy from output of activation2 and targets
+#     # Calculate values along first axis
+#     predictions = np.argmax(activation2.output, axis=1)
+#     accuracy = np.mean(predictions==y)
 
-    # If loss is smaller - print and save weights and biases aside
-    if loss < lowest_loss:
-        print('New set of weights found, iteration:', iteration, 
-              'Loss:', loss, 
-              'Accuracy:', accuracy)
-        best_dense1_weights = dense1.weights.copy()
-        best_dense1_biases = dense1.biases.copy()
-        best_dense2_weights = dense2.weights.copy()
-        best_dense2_biases = dense2.biases.copy()
-        lowest_loss = loss
+#     # If loss is smaller - print and save weights and biases aside
+#     if loss < lowest_loss:
+#         print('New set of weights found, iteration:', iteration, 
+#               'Loss:', loss, 
+#               'Accuracy:', accuracy)
+#         best_dense1_weights = dense1.weights.copy()
+#         best_dense1_biases = dense1.biases.copy()
+#         best_dense2_weights = dense2.weights.copy()
+#         best_dense2_biases = dense2.biases.copy()
+#         lowest_loss = loss
 
-    # Revert weights and biases
-    else:
-        dense1.weights = best_dense1_weights.copy()
-        dense1.biases = best_dense1_biases.copy()
-        dense2.weights = best_dense2_weights.copy()
-        dense2.biases = best_dense2_biases.copy()
+#     # Revert weights and biases
+#     else:
+#         dense1.weights = best_dense1_weights.copy()
+#         dense1.biases = best_dense1_biases.copy()
+#         dense2.weights = best_dense2_weights.copy()
+#         dense2.biases = best_dense2_biases.copy()
+
+# -----------------------------------------------
+# 7. Derivatives
+# -----------------------------------------------
+
+
+def f(x):
+    return 2*x**2
+
+
+# y = mx+b
+x = np.arange(0,5,0.001)
+y = f(x)
+p2_delta = 0.0001
+x1 = 2
+x2 = x1+p2_delta
+
+y1 = f(x1)
+y2 = f(x2)
+
+approximate_derivative = (y2-y1)/(x2-x1)
+b = y2 - approximate_derivative*x2
+
+def tangent_line(x):
+    return approximate_derivative*x + b
+
+to_plot = [x1-0.9, x1, x1+0.9]
+
+
+print('Approximate derivative for f(x)',
+      f'where x = {x1} is {approximate_derivative}')
+
+
+plt.plot(to_plot, [tangent_line(i) for i in to_plot])
+plt.plot(x,y)
+
+plt.show()
+# x = np.array(range(56))
+# y = f(x)
+
 
