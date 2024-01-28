@@ -36,7 +36,7 @@ class Activation_ReLU:
         # Since we need to modify original variable,
         # let's make a copy of values first
         self.dinputs = dvalues.copy()
-        # Zero gradient where input values were negative
+        # Zero gradient where input values were negative1
         self.dinputs[self.inputs <= 0] = 0
 
 class Activation_Softmax: 
