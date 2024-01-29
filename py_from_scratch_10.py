@@ -501,14 +501,14 @@ loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
 
 # Create optimizer
 optimizer = Optimizer_Adam(learning_rate=0.02, decay=5e-7)
-# loss_history = []
-# accuracy_history = []
-# learning_rate_history = []
-# data_loss_history = []
-# regularization_loss_history = []
+loss_history = []
+accuracy_history = []
+learning_rate_history = []
+data_loss_history = []
+regularization_loss_history = []
 
-# fig, axs = plt.subplots(5, 1, figsize=(8, 12), facecolor='darkgray')
-# fig.patch.set_facecolor('#1b1b1b')
+fig, axs = plt.subplots(5, 1, figsize=(8, 12), facecolor='darkgray')
+fig.patch.set_facecolor('#1b1b1b')
 
 # Train in loop
 for epoch in range(10001):
@@ -544,59 +544,59 @@ for epoch in range(10001):
     accuracy = np.mean(predictions==y)
 
     if not epoch % 100:
-        # loss_history.append(loss)
-        # accuracy_history.append(accuracy)
-        # learning_rate_history.append(optimizer.current_learning_rate)
-        # data_loss_history.append(data_loss)
-        # regularization_loss_history.append(regularization_loss)
-        # print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f} (' +f'data_loss: {data_loss:.3f}, ' + f'reg_loss: {regularization_loss:.3f}), ' + f'lr: {optimizer.current_learning_rate}' )
-        # print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f}, ' + f'lr: {optimizer.current_learning_rate}')
+        loss_history.append(loss)
+        accuracy_history.append(accuracy)
+        learning_rate_history.append(optimizer.current_learning_rate)
+        data_loss_history.append(data_loss)
+        regularization_loss_history.append(regularization_loss)
+        print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f} (' +f'data_loss: {data_loss:.3f}, ' + f'reg_loss: {regularization_loss:.3f}), ' + f'lr: {optimizer.current_learning_rate}' )
+        print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f}, ' + f'lr: {optimizer.current_learning_rate}')
         
-        # # Update the subplots with the new data
-        # axs[0].clear()
-        # axs[0].plot(loss_history, label='Loss')
-        # axs[0].set_title('Loss over epochs')
-        # axs[0].set_xlabel('Epoch')
-        # axs[0].set_ylabel('Loss')
-        # axs[0].legend()
-        # axs[0].set_facecolor('#1b1b1b')
+        # Update the subplots with the new data
+        axs[0].clear()
+        axs[0].plot(loss_history, label='Loss')
+        axs[0].set_title('Loss over epochs')
+        axs[0].set_xlabel('Epoch')
+        axs[0].set_ylabel('Loss')
+        axs[0].legend()
+        axs[0].set_facecolor('#1b1b1b')
 
 
-        # axs[1].clear()
-        # axs[1].plot(accuracy_history, label='Accuracy')
-        # axs[1].set_title('Accuracy over epochs')
-        # axs[1].set_xlabel('Epoch')
-        # axs[1].set_ylabel('Accuracy')
-        # axs[1].legend()
-        # axs[1].set_facecolor('#1b1b1b')
+        axs[1].clear()
+        axs[1].plot(accuracy_history, label='Accuracy')
+        axs[1].set_title('Accuracy over epochs')
+        axs[1].set_xlabel('Epoch')
+        axs[1].set_ylabel('Accuracy')
+        axs[1].legend()
+        axs[1].set_facecolor('#1b1b1b')
 
 
-        # axs[2].clear()
-        # axs[2].plot(learning_rate_history, label='Learning Rate')
-        # axs[2].set_title('Learning Rate over epochs')
-        # axs[2].set_xlabel('Epoch')
-        # axs[2].set_ylabel('Learning Rate')
-        # axs[2].legend()
-        # axs[2].set_facecolor('#1b1b1b')
+        axs[2].clear()
+        axs[2].plot(learning_rate_history, label='Learning Rate')
+        axs[2].set_title('Learning Rate over epochs')
+        axs[2].set_xlabel('Epoch')
+        axs[2].set_ylabel('Learning Rate')
+        axs[2].legend()
+        axs[2].set_facecolor('#1b1b1b')
 
-        # axs[3].clear()
-        # axs[3].plot(data_loss_history, label='Data Loss')
-        # axs[3].set_title('Data Loss over epochs')
-        # axs[3].set_xlabel('Epoch')
-        # axs[3].set_ylabel('Data Loss')
-        # axs[3].legend()
-        # axs[3].set_facecolor('#1b1b1b')
+        axs[3].clear()
+        axs[3].plot(data_loss_history, label='Data Loss')
+        axs[3].set_title('Data Loss over epochs')
+        axs[3].set_xlabel('Epoch')
+        axs[3].set_ylabel('Data Loss')
+        axs[3].legend()
+        axs[3].set_facecolor('#1b1b1b')
 
-        # axs[4].clear()
-        # axs[4].plot(regularization_loss_history, label='Regularization Loss')
-        # axs[4].set_title('Regularization Loss over epochs')
-        # axs[4].set_xlabel('Epoch')
-        # axs[4].set_ylabel('Regularization Loss')
-        # axs[4].legend()
-        # axs[4].set_facecolor('#1b1b1b')
-        # # Draw the updated plot
-        # plt.draw()
-        # plt.pause(0.00001)
+        axs[4].clear()
+        axs[4].plot(regularization_loss_history, label='Regularization Loss')
+        axs[4].set_title('Regularization Loss over epochs')
+        axs[4].set_xlabel('Epoch')
+        axs[4].set_ylabel('Regularization Loss')
+        axs[4].legend()
+        axs[4].set_facecolor('#1b1b1b')
+        # Draw the updated plot
+        plt.draw()
+        plt.pause(0.00001)
 
         print(f'epoch: {epoch}, ' +
               f'acc: {accuracy:.3f}, ' +
@@ -648,8 +648,8 @@ accuracy = np.mean(predictions==y_test)
 
 print(f'validation, acc: {accuracy:.3f}, loss: {loss:.3f}')
 # plt.tight_layout()
-# plt.ioff()
-# plt.show()
+plt.ioff()
+plt.show()
 
 
 
