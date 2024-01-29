@@ -2,10 +2,9 @@ import numpy as np
 import nnfs
 from nnfs.datasets import spiral_data
 import matplotlib.pyplot as plt
-import numpy as np
-
 
 nnfs.init()
+
 
 # Dense layer
 class Layer_Dense:
@@ -483,10 +482,10 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
 
 
 # Create dataset
-X, y = spiral_data(samples=1000, classes=3)
+X, y = spiral_data(samples=100, classes=3)
 
 # Create Dense layer with 2 input features and 64 output values
-dense1 = Layer_Dense(2, 512, weight_regularizer_l2=5e-4,
+dense1 = Layer_Dense(2, 64, weight_regularizer_l2=5e-4,
                             bias_regularizer_l2=5e-4)
 
 # Create ReLU activation (to be used with Dense layer):
@@ -494,22 +493,24 @@ activation1 = Activation_ReLU()
 
 # Create second Dense layer with 64 input features (as we take output
 # of previous layer here) and 3 output values (output values)
-dense2 = Layer_Dense(512, 3)
+dense2 = Layer_Dense(64, 3)
 
 # Create Softmax classifier's combined loss and activation
 loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
 
 # Create optimizer
 optimizer = Optimizer_Adam(learning_rate=0.02, decay=5e-7)
-# loss_history = []
-# accuracy_history = []
-# learning_rate_history = []
-# data_loss_history = []
-# regularization_loss_history = []
 
-# fig, axs = plt.subplots(5, 1, figsize=(8, 12), facecolor='darkgray')
-# fig.patch.set_facecolor('#1b1b1b')
+loss_history = []
+accuracy_history = []
+learning_rate_history = []
+data_loss_history = []
+regularization_loss_history = []
 
+fig, axs = plt.subplots(3, 2, figsize=(8, 12), facecolor='darkgray')
+fig.patch.set_facecolor('#1b1b1b')
+# Flatten the axs array for easy iteration
+axs = axs.flatten()
 # Train in loop
 for epoch in range(10001):
 
@@ -544,60 +545,29 @@ for epoch in range(10001):
     accuracy = np.mean(predictions==y)
 
     if not epoch % 100:
-        # loss_history.append(loss)
-        # accuracy_history.append(accuracy)
-        # learning_rate_history.append(optimizer.current_learning_rate)
-        # data_loss_history.append(data_loss)
-        # regularization_loss_history.append(regularization_loss)
-        # print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f} (' +f'data_loss: {data_loss:.3f}, ' + f'reg_loss: {regularization_loss:.3f}), ' + f'lr: {optimizer.current_learning_rate}' )
+        loss_history.append(loss)
+        accuracy_history.append(accuracy)
+        learning_rate_history.append(optimizer.current_learning_rate)
+        data_loss_history.append(data_loss)
+        regularization_loss_history.append(regularization_loss)
+        print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f} (' +f'data_loss: {data_loss:.3f}, ' + f'reg_loss: {regularization_loss:.3f}), ' + f'lr: {optimizer.current_learning_rate}' )
         # print(f'epoch: {epoch}, ' + f'acc: {accuracy:.3f}, ' + f'loss: {loss:.3f}, ' + f'lr: {optimizer.current_learning_rate}')
         
-        # # Update the subplots with the new data
-        # axs[0].clear()
-        # axs[0].plot(loss_history, label='Loss')
-        # axs[0].set_title('Loss over epochs')
-        # axs[0].set_xlabel('Epoch')
-        # axs[0].set_ylabel('Loss')
-        # axs[0].legend()
-        # axs[0].set_facecolor('#1b1b1b')
-
-
-        # axs[1].clear()
-        # axs[1].plot(accuracy_history, label='Accuracy')
-        # axs[1].set_title('Accuracy over epochs')
-        # axs[1].set_xlabel('Epoch')
-        # axs[1].set_ylabel('Accuracy')
-        # axs[1].legend()
-        # axs[1].set_facecolor('#1b1b1b')
-
-
-        # axs[2].clear()
-        # axs[2].plot(learning_rate_history, label='Learning Rate')
-        # axs[2].set_title('Learning Rate over epochs')
-        # axs[2].set_xlabel('Epoch')
-        # axs[2].set_ylabel('Learning Rate')
-        # axs[2].legend()
-        # axs[2].set_facecolor('#1b1b1b')
-
-        # axs[3].clear()
-        # axs[3].plot(data_loss_history, label='Data Loss')
-        # axs[3].set_title('Data Loss over epochs')
-        # axs[3].set_xlabel('Epoch')
-        # axs[3].set_ylabel('Data Loss')
-        # axs[3].legend()
-        # axs[3].set_facecolor('#1b1b1b')
-
-        # axs[4].clear()
-        # axs[4].plot(regularization_loss_history, label='Regularization Loss')
-        # axs[4].set_title('Regularization Loss over epochs')
-        # axs[4].set_xlabel('Epoch')
-        # axs[4].set_ylabel('Regularization Loss')
-        # axs[4].legend()
-        # axs[4].set_facecolor('#1b1b1b')
-        # # Draw the updated plot
-        # plt.draw()
-        # plt.pause(0.00001)
-
+        # Update the subplots with the new data
+        for i, (ax, data, label, ylabel) in enumerate(zip(axs, 
+            [loss_history, accuracy_history, learning_rate_history, data_loss_history, regularization_loss_history], 
+            ['Loss', 'Accuracy', 'Learning Rate', 'Data Loss', 'Regularization Loss'], 
+            ['Loss', 'Accuracy', 'Learning Rate', 'Data Loss', 'Regularization Loss'])):
+            ax.clear()
+            ax.plot(data, label=label)
+            ax.set_title(f'{label} over epochs')
+            ax.set_xlabel('Epoch')
+            ax.set_ylabel(ylabel)
+            ax.legend()
+            ax.set_facecolor('#1b1b1b')
+        # Draw the updated plot
+        plt.draw()
+        plt.pause(0.00001)
         print(f'epoch: {epoch}, ' +
               f'acc: {accuracy:.3f}, ' +
               f'loss: {loss:.3f} (' +
@@ -622,7 +592,7 @@ for epoch in range(10001):
 # Validate the model
 
 # Create test dataset
-X_test, y_test = spiral_data(samples=1000, classes=3)
+X_test, y_test = spiral_data(samples=100, classes=3)
 
 # Perform a forward pass of our testing data through this layer
 dense1.forward(X_test)
@@ -647,14 +617,12 @@ if len(y_test.shape) == 2:
 accuracy = np.mean(predictions==y_test)
 
 print(f'validation, acc: {accuracy:.3f}, loss: {loss:.3f}')
-# plt.tight_layout()
-# plt.ioff()
-# plt.show()
 
-
-
-
-
-
-        
-        
+plt.ioff()
+plt.show()
+'''
+>>>
+...
+epoch: 10000, acc: 0.947, loss: 0.217 (data_loss: 0.157, reg_loss: 0.060), lr: 0.019900507413187767
+validation, acc: 0.830, loss: 0.435
+'''
