@@ -923,8 +923,7 @@ X_test, y_test = spiral_data(samples=100, classes=3)
 model = Model()
 
 # Add layers
-model.add(Layer_Dense(2, 512, weight_regularizer_l2=5e-4,
-                              bias_regularizer_l2=5e-4))
+model.add(Layer_Dense(2, 512, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4))
 model.add(Activation_ReLU())
 model.add(Layer_Dropout(0.1))
 model.add(Layer_Dense(512, 3))
