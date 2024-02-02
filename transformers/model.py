@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import math
 
-class InputEmbeddings(nn.Module):
+class Input_Embeddings(nn.Module):
 
     def __init__(self, d_model: int, vocab_size: int):
         super().__init__()
@@ -10,7 +10,20 @@ class InputEmbeddings(nn.Module):
         self.vocab_size = vocab_size
         self.embedding = nn.embedding(vocab_size, d_model)
 
-    
+class Positional_Encoding(nn.Module):
+    def __init__(self, d_model: int, seq_len: int, dropout: float) -> None:
+            super().__init__()
+            self.d_model = d_model
+            self.seq_len = seq_len
+            self.dropout = nn.Dropout(dropout)
+
+            # Createa matric of shape (seq_len, d_model)
+            pe = torch.zeros(seq_len, d_model)
+
+            # Create a vector of shape (seq_len, 1)
+            position = torch.arrange(0, seq_len, dtype=torch.float).unsqueeze(1)
+            div_term = torch.exp(torch.arrange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+
 class Layer_Normalization(nn.Module):
     
     def __init__(self, eps: float = 10**-6) -> None:
@@ -145,3 +158,18 @@ class Decoder(nn.Module):
         for layer in self.layers:
             x = layer(x, encoder_output, src_mask, tgt_mask)
         return self.norm(x)
+    
+class Projection_Layer(nn.Module):
+
+    def __init__(self, d_model: int, vocab_size: int) -> None:
+        super().__init__()
+        self.proj = nn.Linear(d_model, vocab_size)
+
+    def forward(self, x):
+        # (batch, seq_len, d_model) -> (batch, seq_len, vocab_size)
+        return torch.log_softmax(self.proj(x), dim=-1)
+    
+
+class Transformer_Block(nn.Module):
+
+    def __init__(self, encoder: Encoder, decoder: Decoder, src_embed: Input_Embeddings, tgt_embed: Input_Embeddings, src_pos: Positional_Encoding, tgt_pos: Positional_Encoding, projection: Projection_Layer) -> None:
